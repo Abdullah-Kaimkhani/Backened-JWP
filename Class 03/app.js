@@ -11,11 +11,11 @@ const PORT = 8080;
 const DB_URL = "mongodb+srv://admin:admin@cluster0.uiacs.mongodb.net/";
 mongoose.connect(DB_URL);
 
-mongoose.connection.on('connected', ()=>{
+mongoose.connection.on('connected', () => {
     console.log("Database connected successfully...")
 })
 
-mongoose.connection.on('error', (err)=>{
+mongoose.connection.on('error', (err) => {
     console.log(err)
 })
 
@@ -25,14 +25,14 @@ mongoose.connection.on('error', (err)=>{
 
 // POST API
 
-app.get('/getpost', async(req, res)=>{
+app.get('/getpost', async (req, res) => {
     try {
         const getData = await postModel.find({})
         res.status(200).json({
             message: "Get post successfully",
             getData
         })
-    } catch (error){
+    } catch (error) {
         console.log(error)
     }
     res.send("Get Post")
@@ -40,27 +40,27 @@ app.get('/getpost', async(req, res)=>{
 
 
 
-app.post('/createpost', async(req, res)=>{
+app.post('/createpost', async (req, res) => {
 
     try {
-       const {title, desc} = req.body;
-       if(!title || !desc){
-        res.status(400).json({
-            message: "required fields are missing"
+        const { title, desc } = req.body;
+        if (!title || !desc) {
+            res.status(400).json({
+                message: "required fields are missing"
+            })
+        }
+
+        let obj = {
+            title,
+            desc
+        }
+
+        const saveData = await postModel.create(obj)
+        res.status(200).json({
+            message: "Data saved successfully",
+            saveData
         })
-       }
 
-       let obj = {
-        title,
-        desc
-       }
-
-       const saveData = await postModel.create(obj)
-       res.status(200).json({
-        message: "Data saved successfully",
-        saveData
-       })
-       
     } catch (error) {
         console.log(error)
     }
@@ -69,10 +69,10 @@ app.post('/createpost', async(req, res)=>{
 
 
 
-app.put('/updatepost', async(req, res)=>{
+app.put('/updatepost', async (req, res) => {
 
     try {
-        const {postId, title, desc} = req.body;
+        const { postId, title, desc } = req.body;
 
         const updatedObj = {
             title,
@@ -92,11 +92,11 @@ app.put('/updatepost', async(req, res)=>{
 
 
 
-app.delete('/deletepost/:id', (req, res)=>{
+app.delete('/deletepost/:id', async (req, res) => {
 
     try {
-        const {id} = req.params;
-        const deleteObj = postModel.findOneAndDelete(id);
+        const { id } = req.params;
+        const deleteObj = await postModel.findByIdAndDelete(id);
         res.status(200).json({
             message: "Post deleted successfully...",
             deleteObj
@@ -104,12 +104,11 @@ app.delete('/deletepost/:id', (req, res)=>{
     } catch (error) {
         console.log(error)
     }
-    res.send("Delete Post")
 })
 
 
 
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`Server running on localhost:${PORT}`)
 })
