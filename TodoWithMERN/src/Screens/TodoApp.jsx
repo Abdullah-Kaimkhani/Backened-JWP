@@ -1,10 +1,9 @@
-import { Box, Button, TextField, Typography, Container, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Button, TextField, Typography, Container } from '@mui/material';
 import React, { useState } from 'react';
-import { UserTable } from './Table';
+import { UserTable } from '../Components/Table';
 
 const TodoApp = () => {
   const [inputValue, setInputValue] = useState('');
-  const [privacy, setPrivacy] = useState('public');
   const [tasks, setTasks] = useState([]);
 
   const handleInputChange = (event) => {
@@ -13,24 +12,18 @@ const TodoApp = () => {
 
   const handleAddTask = () => {
     if (inputValue.trim() !== '') {
-      setTasks([...tasks, {
-        text: inputValue.trim(),
-        isPublic: privacy === 'public'
-      }]);
+      setTasks([...tasks, inputValue]);
       setInputValue('');
     }
   };
-
-  console.log(tasks);
 
   const handleDeleteTask = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  const handleEditTask = (index, newText) => {
-    const updatedTasks = tasks.map((task, i) => 
-      i === index ? { ...task, text: newText } : task
-    );
+  const handleEditTask = (index, newValue) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = newValue;
     setTasks(updatedTasks);
   };
 
@@ -45,19 +38,8 @@ const TodoApp = () => {
           variant="outlined"
           value={inputValue}
           onChange={handleInputChange}
-          sx={{ width: '60%' }}
+          sx={{ width: '70%' }}
         />
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>Privacy</InputLabel>
-          <Select
-            value={privacy}
-            onChange={(e) => setPrivacy(e.target.value)}
-            label="Privacy"
-          >
-            <MenuItem value="public">Public</MenuItem>
-            <MenuItem value="private">Private</MenuItem>
-          </Select>
-        </FormControl>
         <Button onClick={handleAddTask} variant="contained" color="primary">Add</Button>
         <Button onClick={() => setTasks([])} variant="contained" color="error">Delete All</Button>
       </Box>

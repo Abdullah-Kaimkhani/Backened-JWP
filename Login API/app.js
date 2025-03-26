@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import userModel from './models/userSchema.js';
 import cors from 'cors';
+import todoModel from './models/todoSchema.js';
 
 const app = express();
 
@@ -27,9 +28,9 @@ const PORT = 3000;
 
 app.post('/api/signup', async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
-        
-        if (!firstName || !lastName || !email || !password) {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
             return res.status(400).send({ message: 'All fields are required' });
         }
 
@@ -41,8 +42,7 @@ app.post('/api/signup', async (req, res) => {
         const encryptedPassword = await bcrypt.hash(password, 10);
 
         const saveData = await userModel.create({
-            firstName,
-            lastName,
+            name,
             email,
             password: encryptedPassword
         });
@@ -55,6 +55,8 @@ app.post('/api/signup', async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 });
+
+
 
 
 // Login API
@@ -72,7 +74,7 @@ app.post('/api/login', async (req, res) => {
 
     if (!emailExist) {
         return res.status(400).send({
-            message: 'Invalid email'
+            message: 'Invalid email or password'
         });
     }
 
@@ -82,7 +84,7 @@ app.post('/api/login', async (req, res) => {
 
     if (!validPassword) {
         return res.status(400).send({
-            message: 'Invalid password'
+            message: 'Invalid email or password'
         })
     }
 
@@ -93,6 +95,81 @@ app.post('/api/login', async (req, res) => {
 });
 
 
+// Get all todo API
+
+app.get('/api/getalltodo', async (req, res) => {
+    try {
+        const allTodo = await todoModel.find();
+        res.status(200).json({
+            message: 'All todo',
+            allTodo
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Server error' });
+    }
+});
+
+
+
+// Create todo API
+
+app.post('/api/addtodo', async (req, res) => {
+    try {
+        const { todo } = req.body;
+
+        if (!todo) {
+            return res.status(400).send({ message: "Input can't be empty" });
+        }
+
+        const saveTodo = await todoModel.create({
+            todo
+        });
+
+        res.status(201).json({
+            message: 'Todo created successfully',
+            saveTodo
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Server error' });
+    }
+});
+
+
+// Update todo API
+
+app.put('/api/updatetodo', async (req, res) => {
+    try {
+        const { id, todo } = req.body;
+        const updatedObj = {
+            todo
+        }
+        const updateTodo = await todoModel.findByIdAndUpdate(id, updatedObj);
+        res.status(200).json({
+            message: 'Todo updated successfully',
+            updateTodo
+        });
+
+    } catch (error) {
+        res.status(500).send({ message: 'Server error' });
+    }
+});
+
+
+
+// Delete todo API
+
+app.delete('/api/deletetodo/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteTodo = await todoModel.findByIdAndDelete(id);
+        res.status(200).json({
+            message: 'Todo deleted successfully',
+            deleteTodo
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Server error' });   
+    }
+});
 
 
 

@@ -4,6 +4,7 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -37,7 +38,7 @@ export function UserTable({ data, onEdit, onDelete }) {
   // Handle edit click
   const handleEdit = (index) => {
     setEditIndex(index);
-    setEditValue(data[index].text);
+    setEditValue(data[index]);
   };
 
   // Handle save after editing
@@ -67,7 +68,7 @@ export function UserTable({ data, onEdit, onDelete }) {
                     autoFocus
                   />
                 ) : (
-                  row.text
+                  row
                 )}
               </StyledTableCell>
               <StyledTableCell align="right">
