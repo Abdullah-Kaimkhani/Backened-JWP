@@ -17,7 +17,7 @@ const saveData = {
 
     const createAccount = () => {
 
-      axios.post('http://localhost:3000/api/signup', saveData)
+      axios.post('https://login-sage-sigma.vercel.app/api/signup', saveData)
       .then((response) => {
           Swal.fire({
             title: "Congratulations!",

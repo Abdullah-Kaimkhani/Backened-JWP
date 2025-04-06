@@ -13,7 +13,7 @@ const Login = () => {
         password
     }
     const loginUser = () => {
-      axios.post('http://localhost:3000/api/login', checkUser)
+      axios.post('https://login-sage-sigma.vercel.app/api/login', checkUser)
   .then((response) => {
     Swal.fire({
       title: "Congratulations!",

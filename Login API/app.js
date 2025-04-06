@@ -62,35 +62,41 @@ app.post('/api/signup', async (req, res) => {
 // Login API
 
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
+    try {
 
-    if (!email || !password) {
-        return res.status(400).send({
-            message: 'All fields are required'
-        });
-    }
+        const { email, password } = req.body;
 
-    const emailExist = await userModel.findOne({ email });
+        if (!email || !password) {
+            return res.status(400).send({
+                message: 'All fields are required'
+            });
+        }
 
-    if (!emailExist) {
-        return res.status(400).send({
-            message: 'Invalid email or password'
-        });
-    }
+        const emailExist = await userModel.findOne({ email });
 
-    // console.log(emailExist)
+        if (!emailExist) {
+            return res.status(400).send({
+                message: 'Invalid email or password'
+            });
+        }
 
-    const validPassword = await bcrypt.compare(password, emailExist.password);
+        // console.log(emailExist)
 
-    if (!validPassword) {
-        return res.status(400).send({
-            message: 'Invalid email or password'
+        const validPassword = await bcrypt.compare(password, emailExist.password);
+
+        if (!validPassword) {
+            return res.status(400).send({
+                message: 'Invalid email or password'
+            })
+        }
+
+        res.status(200).send({
+            message: 'Login successful'
         })
-    }
+    } catch (error) {
+        console.log(error);
 
-    res.status(200).send({
-        message: 'Login successful'
-    })
+    }
 
 });
 
@@ -167,7 +173,7 @@ app.delete('/api/deletetodo/:id', async (req, res) => {
             deleteTodo
         });
     } catch (error) {
-        res.status(500).send({ message: 'Server error' });   
+        res.status(500).send({ message: 'Server error' });
     }
 });
 
