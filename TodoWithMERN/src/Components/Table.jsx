@@ -4,7 +4,6 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -31,23 +30,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export function UserTable({ data, onEdit, onDelete }) {
+export function UserTable({ data, ids, onEdit, onDelete }) {
   const [editIndex, setEditIndex] = React.useState(null);
   const [editValue, setEditValue] = React.useState('');
 
-  // Handle edit click
   const handleEdit = (index) => {
     setEditIndex(index);
     setEditValue(data[index]);
   };
 
-  // Handle save after editing
   const handleSave = (index) => {
-    onEdit(index, editValue);
+    onEdit(ids[index], editValue);
     setEditIndex(null);
   };
 
-  // Handle input change during edit
   const handleInputChange = (event) => {
     setEditValue(event.target.value);
   };
@@ -56,7 +52,6 @@ export function UserTable({ data, onEdit, onDelete }) {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableBody>
-          
           {data.map((row, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell component="th" scope="row">
@@ -90,7 +85,7 @@ export function UserTable({ data, onEdit, onDelete }) {
               </StyledTableCell>
               <StyledTableCell align="right">
                 <button
-                  onClick={() => onDelete(index)}
+                  onClick={() => onDelete(ids[index])}
                   style={{ cursor: 'pointer', border: 'none', background: 'none' }}
                 >
                   <MdDelete size={20} color="red" />

@@ -7,13 +7,11 @@ export const tokenVerification = async(req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         if (decoded){
             next();
-        } else {
-            console.log("token unauthorised..")
         }
     } else {
         console.log("Token missing..")
     }
     } catch (error) {
-        console.log(error)
+        res.status(401).json({message: "Unauthorized"});
     }
 }
